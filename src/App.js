@@ -1,11 +1,30 @@
-import React, { Component, useState, useRef } from 'react';
+import React, { Component, useState, useRef, useEffect } from 'react';
 import * as THREE from "three";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { Canvas, extend, useThree, useFrame } from 'react-three-fiber';
 import { useSpring, a, useSprings } from 'react-spring/three';
 import './App.css';
+import { Path } from 'three';
 
 extend({ OrbitControls });
+
+const Robot = () => {
+  const [model, setModel] = useState();
+  useEffect(() => {
+    new GLTFLoader().load('./mech/scene.gltf', setModel );
+    return (
+      model ? <primitive object={model.scene} /> : null
+    );
+  })
+}
+
+const Plane = () => (
+   <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -.5, 0]} receiveShadow>
+    <planeBufferGeometry attach="geometry" args={[100, 100]} />
+    <meshPhysicalMaterial attach="material" color="white" />
+   </mesh>
+)
 
 const Controls = () => {
   const orbitRef = useRef();
@@ -17,6 +36,9 @@ const Controls = () => {
 
   return(
     <orbitControls 
+    autoRotate
+    maxPolarAngle={Math.PI / 2}
+    minPolarAngle={Math.PI / 3}
     args = {[ camera, gl.domElement ]}
     ref={orbitRef}
     />
@@ -37,9 +59,10 @@ const Box = () => {
     onPointerOut={() => setHovered(false)}
     onClick={() => setActive(!active)}
     scale={props.scale}
+    castShadow
   >
     <boxBufferGeometry attach="geometry" args={[1, 1, 1]} />
-    <a.meshBasicMaterial attach="material" color={props.color} />
+    <a.meshPhysicalMaterial attach="material" color={props.color} />
   </a.mesh>
   )
 }
@@ -48,10 +71,22 @@ class App extends Component {
 
   render() {
     return (
-      <Canvas>
-        <Controls />
-        <Box />
-      </Canvas>
+      <div>
+        <h1>HELLO</h1>
+
+        <Canvas camera={{ position: [0, 0, 5] }} onCreated={({ gl }) => {
+          gl.shadowMap.enabled = true;
+          gl.shadowMap.type = THREE.PCFSoftShadowMap
+        }}>
+          <fog attach="fog" args={["black", 10, 50]} />
+          <ambientLight intensity={.5} />
+          <spotLight position={[15, 20, 5]} penumbra={1} castShadow/>
+          <Controls />
+          <Box />
+          {/* <Plane /> */} 
+          {/* <Robot /> */}
+        </Canvas>
+      </div>
     );
   }
 }
