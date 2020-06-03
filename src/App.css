@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend+Tera&display=swap');
+
 html, body, #root, canvas {
   height: 100%;
   width: 100%;
@@ -10,10 +12,11 @@ body{
 }
 
 h1 {
+  font-family: 'Lexend Tera', sans-serif;
   font-weight: 800;
   font-size: 6em;
   text-align: center;
-  color: red;
+  color: rgb(31, 76, 105);
   position: absolute;
   top: 35%;
   left: 50%;

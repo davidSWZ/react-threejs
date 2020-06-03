@@ -3,25 +3,25 @@ import * as THREE from "three";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { Canvas, extend, useThree, useFrame } from 'react-three-fiber';
-import { useSpring, a, useSprings } from 'react-spring/three';
+import { useSpring, a } from 'react-spring/three';
 import './App.css';
 import { Path } from 'three';
 
 extend({ OrbitControls });
 
-const Robot = () => {
+const Spaceship = () => {
   const [model, setModel] = useState();
   useEffect(() => {
     new GLTFLoader().load('/scene.gltf', setModel );
     
   })
   return (
-      model ? <primitive object={model.scene} /> : null
+      model ? <primitive object={model.scene} castShadow /> : null
     );
 }
 
 const Plane = () => (
-   <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -.5, 0]} receiveShadow>
+   <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -3, 0]} receiveShadow>
     <planeBufferGeometry attach="geometry" args={[100, 100]} />
     <meshPhysicalMaterial attach="material" color="white" />
    </mesh>
@@ -47,7 +47,7 @@ const Controls = () => {
 }
 
 const Box = () => {
-   const [Hovered, setHovered] = useState(false);
+  const [Hovered, setHovered] = useState(false);
   const [active, setActive] = useState(false);
   const props = useSpring({
     scale : active ? [1.5, 1.5, 1.5] : [1, 1, 1],
@@ -79,13 +79,13 @@ class App extends Component {
           gl.shadowMap.enabled = true;
           gl.shadowMap.type = THREE.PCFSoftShadowMap
         }}>
-          <fog attach="fog" args={["black", 10, 50]} />
-          <ambientLight intensity={.9} />
-          <spotLight position={[0, 10, 5]} penumbra={0} castShadow/>
+          <fog attach="fog" args={["black", 30, 50]} />
+          <ambientLight intensity={.2} />
+          <spotLight position={[0, 20, 20]} penumbra={1} castShadow/>
           <Controls />
           {/* <Box /> */}
           {/* <Plane />  */}
-          <Robot />
+          <Spaceship />
         </Canvas>
       </div>
     );
