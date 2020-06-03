@@ -12,11 +12,12 @@ extend({ OrbitControls });
 const Robot = () => {
   const [model, setModel] = useState();
   useEffect(() => {
-    new GLTFLoader().load('./mech/scene.gltf', setModel );
-    return (
+    new GLTFLoader().load('/scene.gltf', setModel );
+    
+  })
+  return (
       model ? <primitive object={model.scene} /> : null
     );
-  })
 }
 
 const Plane = () => (
@@ -72,19 +73,19 @@ class App extends Component {
   render() {
     return (
       <div>
-        <h1>HELLO</h1>
+        <h1>Spaceship Patrol</h1>
 
-        <Canvas camera={{ position: [0, 0, 5] }} onCreated={({ gl }) => {
+        <Canvas camera={{ position: [0, 5, 15] }} onCreated={({ gl }) => {
           gl.shadowMap.enabled = true;
           gl.shadowMap.type = THREE.PCFSoftShadowMap
         }}>
           <fog attach="fog" args={["black", 10, 50]} />
-          <ambientLight intensity={.5} />
-          <spotLight position={[15, 20, 5]} penumbra={1} castShadow/>
+          <ambientLight intensity={.9} />
+          <spotLight position={[0, 10, 5]} penumbra={0} castShadow/>
           <Controls />
-          <Box />
-          {/* <Plane /> */} 
-          {/* <Robot /> */}
+          {/* <Box /> */}
+          {/* <Plane />  */}
+          <Robot />
         </Canvas>
       </div>
     );
